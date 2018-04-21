@@ -1,18 +1,22 @@
 import com.sun.javafx.PlatformUtil;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 public class HotelBookingTest {
 
-    WebDriver driver = new ChromeDriver();
-
+	WebDriver driver;
+			
     @FindBy(linkText = "Hotels")
     private WebElement hotelLink;
-
+    
     @FindBy(id = "Tags")
     private WebElement localityTextBox;
 
@@ -21,13 +25,26 @@ public class HotelBookingTest {
 
     @FindBy(id = "travellersOnhome")
     private WebElement travellerSelection;
+    
+    // Using Page factory initElements() 
+    public HotelBookingTest()
+	{
+	    this.driver = new ChromeDriver();
+	 //This initElements method will create all WebElements
+	    PageFactory.initElements(driver, this);
+	}
+       
 
     @Test
-    public void shouldBeAbleToSearchForHotels() {
+    public void shouldBeAbleToSearchForHotels() 
+    {
         setDriverPath();
 
-        driver.get("https://www.cleartrip.com/");
-        hotelLink.click();
+        this.driver.get("https://www.cleartrip.com/");
+        
+        // Wait until WebElement is visible
+        WebDriverWait link = new WebDriverWait(this.driver,100); 
+        link.until(ExpectedConditions.visibilityOf(hotelLink)).click();
 
         localityTextBox.sendKeys("Indiranagar, Bangalore");
 
